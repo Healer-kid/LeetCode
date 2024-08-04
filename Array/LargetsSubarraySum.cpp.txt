@@ -1,0 +1,117 @@
+Given an integer array nums, find a 
+subarray
+ that has the largest product, and return the product.
+
+The test cases are generated so that the answer will fit in a 32-bit integer.
+
+ 
+
+Example 1:
+
+Input: nums = [2,3,-2,4]
+Output: 6
+Explanation: [2,3] has the largest product 6.
+Example 2:
+
+Input: nums = [-2,0,-1]
+Output: 0
+Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
+ 
+approach 1: o(n3)
+---------------
+
+i -> start of subarray
+j-> end of subarray
+k-> iterate from i to j
+
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+
+int maxi=INT_MIN;
+int n=nums.size();
+
+for(int i=0;i<n;i++){
+
+    for(int j=i;j<n;j++){
+      int prod=1;
+        for(int k=i;k<=j;k++){
+
+            prod=prod*nums[k];
+
+        }
+              maxi=max(maxi,prod);     
+    }
+ 
+}
+return maxi;
+    }
+};
+
+
+approach : o(n2)
+---------------------
+instead of having an iterator like k, we can use i and j itself .
+
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+
+int maxi=INT_MIN;
+int n=nums.size();
+
+for(int i=0;i<n;i++){
+   int prod=1;
+    for(int j=i;j<n;j++){
+   
+    
+
+            prod=prod*nums[j];
+            maxi=max(maxi,prod);
+
+        }
+              
+    }
+ 
+
+return maxi;
+    }
+};
+
+
+
+approach 3: optimal o(n)
+--------------
+1. if all positive , no problem you can multiply all
+2. if even no of negatives , no problem multiply all
+3. if odd no of negatives, then we have to exclude one which gives us minimum subproduct
+eg) 5,-2,1,5,6,-3,2,-1
+then the answer lies in the prefix part or suffix part, which means we can either exclude the negative number from the front or from the end.can never remove from the middle since that will give you less value
+4. if it has zeros , then it will make the subarray 0,so we will stop at zero concluding that as a subarray and start finding new subarray after the zero. (reset prefix,
+
+8,9,0,3,-4,1,0,4,3  --> 8,9 | 3,-4,1 | 4,3
+
+
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        
+double prefix=1,suffix=1;
+double maxi=INT_MIN;
+int n=nums.size();
+for(int i=0;i<n;i++){
+if(prefix==0)
+prefix=1;
+if(suffix==0)
+suffix=1;
+    prefix = prefix*nums[i];
+    suffix=suffix*nums[n-i-1];
+    maxi=max(maxi,max(prefix,suffix));
+
+}
+return maxi;
+    }
+};
